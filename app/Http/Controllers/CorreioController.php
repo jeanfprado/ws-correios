@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use App\Support\Facades\Correio;
 
 class CorreioController extends Controller
 {
