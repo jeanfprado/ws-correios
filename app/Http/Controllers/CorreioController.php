@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use App\Support\Facades\Correio;
 
 class CorreioController extends Controller
 {
@@ -11,32 +12,7 @@ class CorreioController extends Controller
     {
         $cep = $request->route('zipcode');
 
-        $client = new Client();
-
-        $response = $client->post('https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl', [
-            'http_errors' => false,
-            'body' => trim(
-                '<x:Envelope
-                    xmlns:x="http://schemas.xmlsoap.org/soap/envelope/"
-                    xmlns:cli="http://cliente.bean.master.sigep.bsb.correios.com.br/">
-                    <x:Header/>
-                    <x:Body>
-                        <cli:consultaCEP>
-                            <cep>' . $cep . '</cep>
-                        </cli:consultaCEP>
-                    </x:Body>
-                </x:Envelope>'
-            ),
-            'headers' => [
-                'Content-Type' => 'text/xml; charset=utf-8'
-            ]
-        ]);
-
-        $xml = $this->response->getBody()->getContents();
-
-        $parse = simplexml_load_string(str_replace(['soap:', 'ns2:'], null, $xml));
-
-        return json_encode($parse->Body->consultaCEPResponse->return);
+        return Correio::provider('sigep')->consultaCep($cep);
 
     }
 
