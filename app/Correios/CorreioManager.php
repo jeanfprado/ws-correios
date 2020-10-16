@@ -4,11 +4,13 @@ namespace App\Correios;
 
 use App\Correios\Providers\Sigep;
 use Illuminate\Support\Collection;
+use App\Correios\Providers\CalcPrecoPrazo;
 
 class CorreioManager 
 {
     protected $availableProviders = [
-        Sigep::class
+        Sigep::class,
+        CalcPrecoPrazo::class
     ];
 
     protected function getAvailableProviders(): Collection
